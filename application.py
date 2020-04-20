@@ -10,6 +10,12 @@ from models import *
 
 app = Flask(__name__)
 
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.secret_key="Username"
+
+db.init_app(app)
+
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
     raise RuntimeError("DATABASE_URL is not set")
@@ -58,9 +64,12 @@ def auth():
         Username=request.form.get("Username")
         Password=request.form.get("Password")
         user=User.query.get(Username)
-        if (Username==User.Username) and (Password==User.Password):
-            session['User']=user
-            return render_template("account.html")
+        if user!=None:
+            if Password==user.Password:
+                session['Username']=Username
+                return render_template("account.html")
+            else:
+                return "Invalid password"
         else:
             return "Please check your credentials"
 
@@ -75,4 +84,5 @@ def search():
 def logout():
     session["Username"]=None
     return redirect("/register")
+
 
