@@ -34,7 +34,7 @@ def main():
     for isbn,title,author,year in reader:
         book=Book(isbn=isbn,title=title,author=author,year=year)
         db.session.add(book)
-        print(f"Added book of year {year}, isbn: {isbn}, title: {title}, author: {author}.")
+        print(f" Book of year {year}, isbn: {isbn}, title: {title}, author: {author}.")
     db.session.commit()
 
 if __name__=='__main__':
