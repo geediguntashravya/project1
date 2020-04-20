@@ -36,19 +36,38 @@ def index():
 
 
 @app.route("/register", methods= ['POST','GET'])
-def register():
+@app.route("/register/<int:args>", methods= ['POST','GET'])
+def register(args=None):
     Username=""
     message=""
+    if args==1:
+        message="Wrong password"
+    elif args==2:
+        message="Please register"
+    elif args==3:
+        message="Session exired"
+    elif args==4:
+        message="Please login"
+    elif args==5:
+        message="Logged out successfully"
     if request.method=='POST':
         Username=request.form.get("Username")
         Password=request.form.get("Password")
         Email=request.form.get("Email")
-        message=Username+" "+"Successfully registered"
         Timestamp=datetime.datetime.now()
-        users=User(Username,Password,Email,Timestamp)
-        db.add(users)
-        db.commit()
-        return render_template("register.html", message=message)
+        try:
+            if len(Email)<1:
+                message="Email mandatory for registration"
+                return render_template("register.html",message=message)
+            else:
+                message=Username+" "+"Successfully registered"
+                users=User(Username,Password,Email,Timestamp)
+                db.add(users)
+                db.commit()
+                return render_template("register.html", message=message)
+        except:
+            message="Already registered, please login"
+            return render_template("register.html",message=message)
     else:
         return render_template("register.html")
 
@@ -64,25 +83,34 @@ def auth():
         Username=request.form.get("Username")
         Password=request.form.get("Password")
         user=User.query.get(Username)
-        if user!=None:
-            if Password==user.Password:
+        try:
+            if (Username==user.Username) and (Password==user.Password):
                 session['Username']=Username
-                return render_template("account.html")
+                return redirect(url_for('account'))
             else:
-                return "Invalid password"
-        else:
-            return "Please check your credentials"
+                return redirect(url_for('register',args=1))
+        except:
+            return redirect(url_for('register',args=2))
+    else:
+        return redirect(url_for('register',args=4))
 
-@app.route("/search")
-def search():
-    if session["Username"]!=None:
-        return "Maintained successfully"
-    else: 
-        return redirect(url_for("/logout"))
+# @app.route("/search")
+# def search():
+#     if session["Username"]!=None:
+#         return "Maintained successfully"
+#     else: 
+#         return redirect(url_for("logout"))
 
 @app.route("/logout",methods=['GET','POST'])
 def logout():
-    session["Username"]=None
-    return redirect("/register")
+    session.clear()
+    return redirect(url_for('register',args=5))
 
+@app.route("/account",methods=['GET','POST'])
+def account():
+    try:
+        Username=session["Username"]
+        return render_template('account.html')
+    except:
+        return redirect(url_for('register'))
 

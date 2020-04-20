@@ -17,9 +17,9 @@ db=SQLAlchemy(app)
 class Book(db.Model):
     __tablename__="books"
     isbn=db.Column(db.String,primary_key=True)
-    title=db.Column(db.String)
-    author=db.Column(db.String)
-    year=db.Column(db.String)
+    title=db.Column(db.String,nullable=False)
+    author=db.Column(db.String,nullable=False)
+    year=db.Column(db.String,nullable=False)
 
     def __init__(self,isbn,title,author,year):
         self.isbn=isbn
