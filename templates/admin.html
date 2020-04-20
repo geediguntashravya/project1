@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <style>
+        .fixed-header{
+            background-color: lightgreen;
+            padding-bottom: 1%;
+        }
+        .container{
+            background-image: url(https://wallpaperaccess.com/full/1092261.jpg)
+        }
+        body {
+            background-color: khaki;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    </head>
+
+    <body>
+		<div class="fixed-header">
+			<div class="container"></div>
+			<h1><b>Retrieved data</b></h1>
+        </div>
+        <br> 
+        <br>        
+
+        <div class="container">
+            <div class="table-responsive">
+                <table class="table table-hover"> 
+                    <thead>
+                        <tr>
+                            <th scope="col"><b>Username</b></th>
+                            <th scope="col"><b>Password</b></th>
+                            <th scope="col"><b>Timestamp</b></th>
+                        </tr>
+                    </thead>
+                        {%for data in list%}
+                        <tr>
+                            <td>{{data.Username}}</td>
+                            <td>{{data.Password}}</td>
+                            <td>{{data.Timestamp}}</td>
+                        </tr>
+                        {%endfor%}
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

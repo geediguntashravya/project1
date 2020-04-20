@@ -46,20 +46,25 @@
         </style>  
 </head>  
 <body>  
-    <form action="" method='POST'>  
+    <form action="/register" method='POST'>  
+      <div class="container">
+				{% if message %}
+				<p>{{ message }}</p>
+				{% endif %}
+			</div>	
         <div class="container">  
             <h1> Registration Form</h1> 
         <hr>  
-        <label for="email"><b>Email</b></label>  
-        <input type="text" placeholder="Enter Email" name="email">  
+        <label><b>Email</b></label>  
+        <input type="text" placeholder="Enter Email" name="Email">  
 
-        <label for="username"><b>Username</b></label>  
-        <input type="text" placeholder="Enter Username" name="username" required>
+        <label ><b>Username</b></label>  
+        <input type="text" placeholder="Enter Username" name="Username" required>
 
-        <label for="psw"><b>Password</b></label>  
-        <input type="password" placeholder="Enter Password" name="psw" required>    
+        <label><b>Password</b></label>  
+        <input type="password" placeholder="Enter Password" name="Password" required>    
 
-        <div>  
+        <!-- <div>  
         <label> Gender : </label><br>  
         <input type="radio" value="Male" name="gender" checked > Male   
         <input type="radio" value="Female" name="gender"> Female   
@@ -70,9 +75,10 @@
         <input type="text" name="DOB" placeholder= "DOB" size="15"> 
 
         Current Address :  
-        <textarea cols="80" rows="5" placeholder="Current Address" value="address">  </textarea>  
+        <textarea cols="80" rows="5" placeholder="Current Address" value="address">  </textarea>   -->
   
-        <input type="submit" name="submit" value="Submit">  
+        <button type="submit" formaction="/register" name="Register">Register</button>
+        <button type="submit" formaction="/auth" name="Login">Login</button>
     </form>  
 </body>  
 </html>
