@@ -6,6 +6,7 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models import *
+from imports import *
 
 
 app = Flask(__name__)
@@ -40,16 +41,6 @@ def index():
 def register(args=None):
     Username=""
     message=""
-    if args==1:
-        message="Wrong password"
-    elif args==2:
-        message="Please register"
-    elif args==3:
-        message="Session exired"
-    elif args==4:
-        message="Please login"
-    elif args==5:
-        message="Logged out successfully"
     if request.method=='POST':
         Username=request.form.get("Username")
         Password=request.form.get("Password")
@@ -69,7 +60,19 @@ def register(args=None):
             message="Already registered, please login"
             return render_template("register.html",message=message)
     else:
-        return render_template("register.html")
+        if args==1:
+            message="Wrong password"
+        elif args==2:
+            message="Please register"
+        elif args==3:
+            message="Session exired"
+        elif args==4:
+            message="Please login"
+        elif args==5:
+            message="Logged out successfully"
+        else: 
+            message=""
+        return render_template("register.html",message=message)
 
 
 @app.route("/admin")
@@ -94,12 +97,32 @@ def auth():
     else:
         return redirect(url_for('register',args=4))
 
-# @app.route("/search")
-# def search():
-#     if session["Username"]!=None:
-#         return "Maintained successfully"
-#     else: 
-#         return redirect(url_for("logout"))
+@app.route("/search", methods=['POST','GET'])
+def search():
+    if request.method=='POST':
+        field=((request.form['Choose']))
+        key=request.form.get('Search')
+        #print(key)
+        search="%{}%".format(key)
+        if field=="isbn":
+            list=db.query(Book).filter(Book.isbn.like(search))
+            for x in list:
+                return render_template('search.html',list=list)
+        elif field=="title":
+            list=db.query(Book).filter(Book.title.like(search))
+            for x in list:
+                return render_template('search.html',list=list)
+        elif field=="author":
+            list=db.query(Book).filter(Book.author.like(search))
+            for x in list:
+                return render_template('search.html',list=list)
+        else:
+            list=db.query(Book).filter(Book.year.like(search))
+            for x in list:
+                return render_template('search.html',list=list)
+    else: 
+        return render_template('search.html')
+    return render_template('search.html')
 
 @app.route("/logout",methods=['GET','POST'])
 def logout():
@@ -113,4 +136,12 @@ def account():
         return render_template('account.html')
     except:
         return redirect(url_for('register'))
+
+@app.route("/book",methods=['POST','GET'])
+@app.route("/book/<string:args>", methods= ['POST','GET'])
+def book(args=None):
+    message="This is isbn of the book: "+args
+    if request.method=='POST':
+        return render_template('book.html',message=message)
+    return render_template('book.html',message=message)
 
