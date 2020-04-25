@@ -17,15 +17,15 @@ class User(db.Model):
 
 
 class review(db.Model):
-    __tablename__ = "Review"
+    __tablename__ = "review"
     title = db.Coloumn(db.String, primary_key=True)
     username = db.Column(db.String, primary_key=True)
     rating = db.Column(db.String, nullable=False)
     review = db.Column(db.String, index=False, unique=False, nullable=False)
 
-    def __init__(self, username, title, rating, review):
+    def __init__(self, Username, title, rating, review):
         
         self.title = title
-        self.username = username
+        self.username = Username
         self.rating = rating
         self.review = review

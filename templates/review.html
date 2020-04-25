@@ -1,0 +1,131 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>review</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <style>
+      .rate {
+            float: left;
+            height: 40px;
+            padding: 0 10px;
+            align-content: center;
+            margin : auto auto auto 40%;
+        }
+        .rate:not(:checked) > input {
+            position:absolute;
+            top:-9999px;
+        }
+        .rate:not(:checked) > label {
+            float:right;
+            width:1em;
+            overflow:hidden;
+            white-space:nowrap;
+            cursor:pointer;
+            font-size:30px;
+            color:#ccc;
+        }
+        .rate:not(:checked) > label:before {
+            content: '★ ';
+        }
+        .rate > input:checked ~ label {
+            color: #ffc700;    
+        }
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+            color: #deb217;  
+        }
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+
+        .container {
+            width : 70%;
+        }
+
+        .table {
+            text-align: center;
+            margin: auto;
+            border: 3px solid black;
+            padding: 20px;
+        }
+
+        .review {
+            display: table;
+            margin: auto auto auto 40%;
+        }
+  </style>
+</head>
+
+<body class = "container">
+    {%if book %}
+      <table class = "table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="bg-warning">Book Fields</th>
+                <th scope="col">Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ISBN No.</td>
+                <td>{{book.isbn}}</td>
+                </tr>
+                <tr>
+                    <td>Title</td>
+                    <td>{{book.title}}</td>
+                </tr>
+                <tr>
+                    <td>Author</td>
+                    <td>{{book.author}}</td>
+                </tr>
+                <tr>
+                    <td>Publishing Year</td>
+                    <td>{{book.year}}</td>
+                </tr>
+
+            </tr>
+        </tbody>
+      </table> 
+      <br/>
+      {% endif %}
+    
+    <h2>Rating:</h2>
+    <div class="rate" >
+        <input type="radio" id="star5" name="rate" value="5" />
+        <label for="star5" title="5">5 stars</label>
+        <input type="radio" id="star4" name="rate" value="4" />
+        <label for="star4" title="4">4 stars</label>
+        <input type="radio" id="star3" name="rate" value="3" />
+        <label for="star3" title="3">3 stars</label>
+        <input type="radio" id="star2" name="rate" value="2" />
+        <label for="star2" title="2">2 stars</label>
+        <input type="radio" id="star1" name="rate" value="1" />
+        <label for="star1" title="1">1 star</label>
+    </div> <br/> <br/>
+
+    <div align = "center">
+        <textarea class="form-control" id="validationTextarea" placeholder="write review" required></textarea>
+        <button type = "submit"> Submit review</button>
+    </div>
+
+    {% for rate in rating %}
+        <div class = "review">  
+            <ul>
+                <li>username :: {{rate.username}}</li>
+                <li>rating :: {{rate.rating}}</li>
+                <li>review :: {{rate.review}}</li>
+            </ul>
+        </div>
+              
+    {% endfor %}
+</body>
+
+</html>
+
+
+
