@@ -14,3 +14,18 @@ class User(db.Model):
         self.Password = Password
         self.Email = Email
         self.Timestamp= Timestamp
+
+
+class review(db.Model):
+    __tablename__ = "Review"
+    title = db.Coloumn(db.String, primary_key=True)
+    username = db.Column(db.String, primary_key=True)
+    rating = db.Column(db.String, nullable=False)
+    review = db.Column(db.String, index=False, unique=False, nullable=False)
+
+    def __init__(self, username, title, rating, review):
+        
+        self.title = title
+        self.username = username
+        self.rating = rating
+        self.review = review
