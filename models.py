@@ -18,7 +18,7 @@ class User(db.Model):
 
 class review(db.Model):
     __tablename__ = "review"
-    title = db.Coloumn(db.String, primary_key=True)
+    title = db.Column(db.String, primary_key=True)
     username = db.Column(db.String, primary_key=True)
     rating = db.Column(db.String, nullable=False)
     review = db.Column(db.String, index=False, unique=False, nullable=False)

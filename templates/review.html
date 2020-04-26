@@ -110,7 +110,7 @@
 
     <div align = "center">
         <textarea class="form-control" id="validationTextarea" placeholder="write review" required></textarea>
-        <button type = "submit"> Submit review</button>
+        <button type = "submit" action="{{url_for('bookpage')}}" method="post"> Submit review</button>
     </div>
 
     {% for rate in rating %}
