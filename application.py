@@ -114,3 +114,31 @@ def account():
     except:
         return redirect(url_for('register'))
 
+@app.route("/bookpage", methods =['GET', 'POST'])
+def bookpage():
+    if session.get("Username") is None:
+        return redirect("/register")
+
+    isbn = "0380795272"
+    book  = db.query(Book).filter_by(isbn = isbn).first()
+    rating = db.query(Review).filter_by(title=book.title).all()
+    # print("hello book name",book.isbn)
+    
+    # obj = db.query(User).get("Username")
+    Uname = session.get("Username")
+    print(Uname) 
+    if request.method == "POST":
+        title = book.title
+        rating1 = request.form.get("rate")
+        review = request.form.get("comment")
+        temp = Review(Uname,title,rating1,review)
+        try:
+            db.add(temp)
+            db.commit() 
+            ratin = db.query(Review).filter_by(title=book.title).all()
+            return render_template("review.html",data = book, name = Uname,rating = ratin)
+        except:
+            db.rollback()
+            return render_template("review.html", data = book, name = "User already given review", rating = rating)
+    else:
+        return render_template("review.html",data = book, name = Uname ,rating = rating)
