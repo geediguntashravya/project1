@@ -3,7 +3,7 @@ import datetime
 
 from flask import *
 from flask_session import Session
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,func
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models import *
 from imports import *
@@ -89,7 +89,7 @@ def auth():
         try:
             if (Username==user.Username) and (Password==user.Password):
                 session['Username']=Username
-                return redirect(url_for('account'))
+                return redirect(url_for('search'))
             else:
                 return redirect(url_for('register',args=1))
         except:
@@ -100,30 +100,9 @@ def auth():
 @app.route("/search", methods=['POST','GET'])
 def search():
     if request.method=='POST':
-        field=((request.form['Choose']))
-        key=request.form.get('Search')
-        #print(key)
-        search="%{}%".format(key)
-        print(serach)
-        if field=="isbn":
-            list=db.query(Book).filter(Book.isbn.like(search))
-            for x in list:
-                return render_template('search.html',list=list)
-        elif field=="title":
-            list=db.query(Book).filter(Book.title.like(search))
-            for x in list:
-                return render_template('search.html',list=list)
-        elif field=="author":
-            list=db.query(Book).filter(Book.author.like(search))
-            for x in list:
-                return render_template('search.html',list=list)
-        else:
-            list=db.query(Book).filter(Book.year.like(search))
-            for x in list:
-                return render_template('search.html',list=list)
-    else: 
-        return render_template('search.html')
-    return render_template('search.html')
+        return redirect(url_for('display'))
+    return redirect(url_for('display'))
+    
 
 @app.route("/logout",methods=['GET','POST'])
 def logout():
@@ -138,13 +117,39 @@ def account():
     except:
         return redirect(url_for('register'))
 
-@app.route("/book",methods=['POST','GET'])
-@app.route("/book/<string:args>", methods= ['POST','GET'])
-def book(args=None):
-    message="This is isbn of the book: "+args
+
+
+@app.route("/display",methods=['POST','GET'])
+def display():
+
     if request.method=='POST':
-        return render_template('book.html',message=message)
-    return render_template('book.html',message=message)
+        field=((request.form['Choose']))
+        key=request.form.get('Search')
+        #print(key)
+        search_key="%{}%".format(key)
+        if field=="isbn":
+            data=db.query(Book).filter(Book.isbn.like(search_key))
+            for x in data:
+                return render_template('display.html',list=data)
+        elif field=="title":
+            data=db.query(Book).filter(Book.title.like(search_key))
+            for x in data:
+                return render_template('display.html',list=data)
+        elif field=="author":
+            data=db.query(Book).filter(Book.author.like(search_key))
+            for x in data:
+                return render_template('display.html',list=data)
+        else:
+            if field=="":
+                abort(404)
+            else:
+                
+                return render_template('search.html')
+
+            
+    else: 
+        return render_template('search.html')
+    
 
 
 
