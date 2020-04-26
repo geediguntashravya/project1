@@ -33,7 +33,8 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    return "Project 1: TODO"
+   
+    return render_template('intropage.html')
 
 
 @app.route("/register", methods= ['POST','GET'])
@@ -74,14 +75,13 @@ def register(args=None):
             message=""
         return render_template("register.html",message=message)
 
-
 @app.route("/admin")
 def admin():
     data=db.query(User).order_by(User.Timestamp)
     return render_template('admin.html',list=data)
 
-@app.route("/auth", methods=['POST','GET'])
-def auth(): 
+@app.route("/login", methods=['POST','GET'])
+def login(): 
     if request.method=='POST':
         Username=request.form.get("Username")
         Password=request.form.get("Password")
@@ -149,6 +149,10 @@ def display():
             
     else: 
         return render_template('search.html')
+
+@app.route('/home',methods=['GET','POST'])
+def home():
+	return render_template("intropage.html")
     
 
 
