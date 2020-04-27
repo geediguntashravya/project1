@@ -32,26 +32,42 @@
       }
       .submit{
       width: 70px;
-      
-
       }
+      button{
+      
+      padding: 6px 10px;
+      margin-top: 8px;
+      margin-right: 16px;
+    
+      font-size: 17px;
+      border: none;
+      cursor: pointer;
+    
+      }
+      
+      
+      
+     
+      
 </style>
 </head>
     
 
     
     <body> 
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  
+            <form action="/">
+          
+                <button class="btn btn-success" type="submit" formaction="/logout" >logout</button>
+                <button class="btn btn-success" type="submit" formaction="/home" >Home</button>
+              </form>
+            </nav>
         
     
     <div class="p-3 mb-2 bg-primary text-white "><h3 style = "text-align: center">Welcome To GoodReads</h3></div>
     <marquee style="font-size: 25px;color: red;">"Please type isbn number or title or author of the book "</marquee>
-    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-    <span class="navbar-text">
-        <form>
-            <button type = "submit" class="btn btn-primary" formaction = '/logout'>Logout</button>
-        </form>
-    </span>
-    </nav>
+    
     <h1></h1>
     
     <form method="POST">

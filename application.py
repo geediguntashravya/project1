@@ -129,16 +129,26 @@ def display():
         search_key="%{}%".format(key)
         if field=="isbn":
             data=db.query(Book).filter(Book.isbn.like(search_key))
-            for x in data:
+            if  data is not None:
                 return render_template('display.html',list=data)
+                
+            else:
+                return render_template('search.html')
+                
         elif field=="title":
             data=db.query(Book).filter(Book.title.like(search_key))
-            for x in data:
+            if  data is not None:
                 return render_template('display.html',list=data)
+                
+            else:
+                return render_template('search.html')
         elif field=="author":
             data=db.query(Book).filter(Book.author.like(search_key))
-            for x in data:
+            if  data is not None:
                 return render_template('display.html',list=data)
+                
+            else:
+                return render_template('search.html')
         else:
             if field=="":
                 abort(404)
