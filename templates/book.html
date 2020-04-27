@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <style> 
+        .table {
+            text-align: center;
+            margin: auto;
+            border: 3px solid black;
+            padding: 20px;
+        }
+    </style>
+    <body> 
+    
+    <div class="p-3 mb-2 bg-primary text-white "><h3 style = "text-align: center">Book</h3></div>
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    <span class="navbar-text">
+        <form>
+            <button type = "submit" class="btn btn-primary" formaction = '/display'>Back</button>
+        </form>
+    </span>
+    </nav>
+    <div class="container">
+        {%for data in list%}
+        <table class = "table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col" class="bg-warning">Book Fields</th>
+                    <th scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ISBN No.</td>
+                    <td>{{data.isbn}}</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>{{data.title}}</td>
+                    </tr>
+                    <tr>
+                        <td>Author</td>
+                        <td>{{data.author}}</td>
+                    </tr>
+                    <tr>
+                        <td>Publishing Year</td>
+                        <td>{{data.year}}</td>
+                    </tr>
+    
+                </tr>
+            </tbody>
+          </table> 
+          <br/>
+    {% endfor %}
+          </div>
+          
+    </body>
+</html>
+ 

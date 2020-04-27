@@ -31,19 +31,13 @@
                 <thead>
                     <tr>
                         <th scope="col"><b>Isbn</b></th>
-                        <th scope="col"><b>Title</b></th>
-                        <th scope="col"><b>Author</b></th>
-                        <th scope="col"><b>Year</b></th>
-                        <th scope="col"><b>Rewiew</b></th>
+                        
                     </tr>
                 </thead>
                     {%for data in list%}
                     <tr>
-                        <td>{{data.isbn}}</td>
-                        <td>{{data.title}}</td>
-                        <td>{{data.author}}</td>
-                        <td>{{data.year}}</td>
-                        <td>{{data.reviews}}</td>
+                        <td><a href="{{'/book/%s'%data.isbn}}">{{data.isbn}}</a></td>
+                        
                     </tr>
                     {%endfor%}
             </table>
