@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models import *
 from imports import *
+from find import *
 
 
 app = Flask(__name__)
@@ -101,25 +102,9 @@ def auth():
 def search():
     if request.method=='POST':
         field=((request.form['Choose']))
-        key=request.form.get('Search')
-        #print(key)
+        key=request.form.get('Search') 
         search="%{}%".format(key)
-        if field=="isbn":
-            list=db.query(Book).filter(Book.isbn.like(search))
-            for x in list:
-                return render_template('search.html',list=list)
-        elif field=="title":
-            list=db.query(Book).filter(Book.title.like(search))
-            for x in list:
-                return render_template('search.html',list=list)
-        elif field=="author":
-            list=db.query(Book).filter(Book.author.like(search))
-            for x in list:
-                return render_template('search.html',list=list)
-        else:
-            list=db.query(Book).filter(Book.year.like(search))
-            for x in list:
-                return render_template('search.html',list=list)
+        return find(field,search)
     else: 
         return render_template('search.html')
     return render_template('search.html')
