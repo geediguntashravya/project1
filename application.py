@@ -9,6 +9,7 @@ from models import *
 from imports import *
 
 
+
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
@@ -163,7 +164,8 @@ def display():
 @app.route("/book",methods=['POST','GET'])
 @app.route("/book/<string:args>", methods= ['POST','GET'])
 def book(args=None):
-    data=db.query(Book).filter(Book.isbn.like(args))
+    data = db.query(Book).filter(Book.isbn== args)
+		
     if request.method=='POST':
         return render_template('book.html',list=data)
     return render_template('book.html',list=data)
