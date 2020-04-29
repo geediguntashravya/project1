@@ -1,137 +1,154 @@
 <html>
 
-<head>
-  <meta charset="UTF-8">
-  <title>review</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <style>
-      .rate {
-            float: left;
-            height: 40px;
-            padding: 0 10px;
-            align-content: center;
-            margin : auto auto auto 40%;
-        }
-        .rate:not(:checked) > input {
-            position:absolute;
-            top:-9999px;
-        }
-        .rate:not(:checked) > label {
-            float:right;
-            width:1em;
-            overflow:hidden;
-            white-space:nowrap;
-            cursor:pointer;
-            font-size:30px;
-            color:#ccc;
-        }
-        .rate:not(:checked) > label:before {
-            content: '★ ';
-        }
-        .rate > input:checked ~ label {
-            color: #ffc700;    
-        }
-        .rate:not(:checked) > label:hover,
-        .rate:not(:checked) > label:hover ~ label {
-            color: #deb217;  
-        }
-        .rate > input:checked + label:hover,
-        .rate > input:checked + label:hover ~ label,
-        .rate > input:checked ~ label:hover,
-        .rate > input:checked ~ label:hover ~ label,
-        .rate > label:hover ~ input:checked ~ label {
-            color: #c59b08;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <title>review</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <style>
+            .rate {
+                    float: left;
+                    height: 40px;
+                    padding: 0 10px;
+                    align-content: center;
+                    margin : auto auto auto 40%;
+                }
+                .rate:not(:checked) > input {
+                    position:absolute;
+                    top:-9999px;
+                }
+                .rate:not(:checked) > label {
+                    float:right;
+                    width:1em;
+                    overflow:hidden;
+                    white-space:nowrap;
+                    cursor:pointer;
+                    font-size:30px;
+                    color:#ccc;
+                }
+                .rate:not(:checked) > label:before {
+                    content: '★ ';
+                }
+                .rate > input:checked ~ label {
+                    color: #ffc700;    
+                }
+                .rate:not(:checked) > label:hover,
+                .rate:not(:checked) > label:hover ~ label {
+                    color: #deb217;  
+                }
+                .rate > input:checked + label:hover,
+                .rate > input:checked + label:hover ~ label,
+                .rate > input:checked ~ label:hover,
+                .rate > input:checked ~ label:hover ~ label,
+                .rate > label:hover ~ input:checked ~ label {
+                    color: #c59b08;
+                }
 
-        .container {
-            width : 70%;
-        }
+                .container {
+                    width : 70%;
+                }
 
-        .table {
-            text-align: center;
-            margin: auto;
-            border: 3px solid black;
-            padding: 20px;
-        }
+                .table {
+                    text-align: center;
+                    margin: auto;
+                    border: 3px solid black;
+                    padding: 20px;
+                }
 
-        .review {
-            display: table;
-            margin: auto auto auto 40%;
-        }
-  </style>
-</head>
+                .review {
+                    display: table;
+                    margin: auto auto auto 40%;
+                }
+        </style>
+    </head>
 
-<body class = "container">
-    {%if data %}
-      <table class = "table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col" class="bg-warning">Book Fields</th>
-                <th scope="col">Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>ISBN No.</td>
-                <td>{{data.isbn}}</td>
-                </tr>
+    <body class = "container">
+        {%if data %}
+        <table class = "table">
+            <thead class="thead-light">
                 <tr>
-                    <td>Title</td>
-                    <td>{{data.title}}</td>
+                    <th scope="col" class="bg-warning">Book Fields</th>
+                    <th scope="col">Details</th>
                 </tr>
+            </thead>
+            <tbody>
                 <tr>
-                    <td>Author</td>
-                    <td>{{data.author}}</td>
+                    <td>ISBN No.</td>
+                    <td>{{data.isbn}}</td>
+                    </tr>
+                    <tr>
+                        <td>Title</td>
+                        <td>{{data.title}}</td>
+                    </tr>
+                    <tr>
+                        <td>Author</td>
+                        <td>{{data.author}}</td>
+                    </tr>
+                    <tr>
+                        <td>Publishing Year</td>
+                        <td>{{data.year}}</td>
+                    </tr>
+
                 </tr>
-                <tr>
-                    <td>Publishing Year</td>
-                    <td>{{data.year}}</td>
-                </tr>
+            </tbody>
+        </table> 
+        <br/>
+        {% endif %}
+        
+        <h2>Rating:</h2>
 
-            </tr>
-        </tbody>
-      </table> 
-      <br/>
-    {% endif %}
-    
-    <h2>Rating:</h2>
+        <form class="in" action="{{url_for('review')}}" method="post" id="usrform">
+            <h3>Hello {{name}}</h3><br><br>
 
-    <form class="in" action="{{url_for('bookpage')}}" method="post" id="usrform">
-        <h3>Hello {{name}},review the book</h3><br><br>
+            <div class="rate" >
+                <input type="radio" id="star5" name="rate" value="5" style="text-align: center;"/>
+                <label for="star5" title="text">5 stars</label>
 
-        <div class="rate" >
-            <input type="radio" id="star5" name="rate" value="5" style="text-align: center;"/>
-            <label for="star5" title="text">5 stars</label>
+                <input type="radio" id="star4" name="rate" value="4" style="text-align: center;"/>
+                <label for="star4" title="text">4 stars</label>
+                
+                <input type="radio" id="star3" name="rate" value="3" style="text-align: center;"/>
+                <label for="star3" title="text">3 stars</label>
+                
+                <input type="radio" id="star2" name="rate" value="2" style="text-align: center;"/>
+                <label for="star2" title="text">2 stars</label>
+                
+                <input type="radio" id="star1" name="rate" value="1" style="text-align: center;"/>
+                <label for="star1" title="text">1 star</label>
+            </div><br><br><br> 
+            <div align = "center">
+                <textarea rows="4" cols="50"  name="comment" form="usrform" placeholder="Write review"></textarea>
+                <button type="submit">submit</button> 
+            </div>
+     </form>
+        
+        
+            <div class = "review" align = "center">  
 
-            <input type="radio" id="star4" name="rate" value="4" style="text-align: center;"/>
-            <label for="star4" title="text">4 stars</label>
-            
-            <input type="radio" id="star3" name="rate" value="3" style="text-align: center;"/>
-            <label for="star3" title="text">3 stars</label>
-            
-            <input type="radio" id="star2" name="rate" value="2" style="text-align: center;"/>
-            <label for="star2" title="text">2 stars</label>
-            
-            <input type="radio" id="star1" name="rate" value="1" style="text-align: center;"/>
-            <label for="star1" title="text">1 star</label>
-        </div><br><br><br> 
-        <div align = "center">
-            <textarea rows="4" cols="50"  name="comment" form="usrform" placeholder="Write review"></textarea>
-            <button type="submit">submit</button> 
-        </div>
-</form>
-    
-    {% for rate in rating %}
-        <div class = "review">  
-            <ul>
-                <li>username :: {{rate.username}}</li>
-                <li>rating :: {{rate.rating}}</li>
-                <li>review :: {{rate.review}}</li>
-            </ul>
-        </div>
-              
-    {% endfor %}
-</body>
+                <table class = "table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="bg-warning">Username</th>
+                            <th scope="col">Rating</th>
+                            <th scope="col" class="bg-warning">Review</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rate in rating %}
+                        <tr>
+                            <td>{{rate.username}}</td>
+                            <td>{{rate.rating}}</td>
+                            <td>{{rate.review}}</td>
+                        </tr>
+                        {% endfor %}
+                            
+                    </tbody>
+                </table>
+
+                
+            </div>
+                
+       
+    </body>
 
 </html>
 

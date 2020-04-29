@@ -114,8 +114,8 @@ def account():
     except:
         return redirect(url_for('register'))
 
-@app.route("/bookpage", methods =['GET', 'POST'])
-def bookpage():
+@app.route("/review", methods =['GET', 'POST'])
+def review():
     if session.get("Username") is None:
         return redirect("/register")
 
