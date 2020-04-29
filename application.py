@@ -7,6 +7,7 @@ from sqlalchemy import create_engine,func
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models import *
 from imports import *
+from check_isbn import *
 
 
 
@@ -164,8 +165,7 @@ def display():
 @app.route("/book",methods=['POST','GET'])
 @app.route("/book/<string:args>", methods= ['POST','GET'])
 def book(args=None):
-    data = db.query(Book).filter(Book.isbn== args)
-		
+    data = check_isbn(args)
     if request.method=='POST':
         return render_template('book.html',list=data)
     return render_template('book.html',list=data)
