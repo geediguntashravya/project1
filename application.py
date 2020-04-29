@@ -104,7 +104,8 @@ def search():
         field=((request.form['Choose']))
         key=request.form.get('Search') 
         search="%{}%".format(key)
-        return find(field,search)
+        list=find(field,search)
+        return render_template('search.html',list=list)
     else: 
         return render_template('search.html')
     return render_template('search.html')
