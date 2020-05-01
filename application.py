@@ -114,12 +114,12 @@ def account():
     except:
         return redirect(url_for('register'))
 
-@app.route("/review", methods =['GET', 'POST'])
-def review():
+@app.route("/review/<isbn>", methods =['GET', 'POST'])
+def review(isbn):
     if session.get("Username") is None:
         return redirect("/register")
 
-    isbn = "0380795272"
+    # isbn = "0380795272"
     book  = db.query(Book).filter_by(isbn = isbn).first()
     rating = db.query(Review).filter_by(title=book.title).all()
     # print("hello book name",book.isbn)
