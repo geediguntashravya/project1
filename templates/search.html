@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <style> 
+        table {
+            border: 1;
+            align-content: center;
+        }
+    </style>
+    <body> 
+    
+    <div class="p-3 mb-2 bg-primary text-white "><h3 style = "text-align: center">Welcome To GoodReads</h3></div>
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    <span class="navbar-text">
+        <form>
+            <button type = "submit" class="btn btn-primary" formaction = '/logout'>Logout</button>
+        </form>
+    </span>
+    </nav>
+    
+    <div class="container">
+        <form class="form-inline my-2 my-lg-0" method = 'POST'>
+            <select id="word" name="Choose">
+            <option value="isbn">ISBN</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+            <option value="year">Year</option>
+            </select>
+            <input class="form-control mr-sm-2" type="search" name = "Search" placeholder="Search" aria-label="Search" required>
+            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit" formaction = '/search' id = "#display"><i class="fa fa-search"></i></button>
+        </form>
+        </br>
+        </br>
+    </div>
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-hover"> 
+                <thead>
+                    <tr>
+                        <th scope="col"><b>Isbn</b></th>
+                        <th scope="col"><b>Title</b></th>
+                        <th scope="col"><b>Author</b></th>
+                        <th scope="col"><b>Year</b></th>
+                    </tr>
+                </thead>
+                    {%for data in list%}
+                    <tr>
+                        <td><a href="{{'/book/%s'%data.isbn}}">{{data.isbn}}</a></td>
+                        <td>{{data.title}}</td>
+                        <td>{{data.author}}</td>
+                        <td>{{data.year}}</td>
+                    </tr>
+                    {%endfor%}
+            </table>
+        </div>
+    </div>
+    </body>
+</html>
+ 
