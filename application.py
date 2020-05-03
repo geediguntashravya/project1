@@ -165,15 +165,16 @@ def display():
 @app.route("/book",methods=['POST','GET'])
 @app.route("/book/<string:args>", methods= ['POST','GET'])
 def book(args=None):
-    data = check_isbn(args)
+    
     if request.method=='POST':
-        return render_template('book.html',list=data)
-    return render_template('book.html',list=data)
-
+        session['isbn'] = args
+        
 @app.route('/home',methods=['GET','POST'])
 def home():
 	return render_template("intropage.html")
-    
+
+
+
 
 
 
