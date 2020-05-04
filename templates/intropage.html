@@ -6,46 +6,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-  <style>
-    button{
-      
-      padding: 6px 10px;
-      margin-top: 8px;
-      margin-right: 16px;
-    
-      font-size: 17px;
-      border: none;
-      cursor: pointer;
-    
-      }
-      h1{
-        text-align: center;
-        font-size: 150px;
-        color : yellow;
-      }
-      
-      body {
-    /* The image used */
-    background-image: url("../templates/image/image5.jpg");
-    
-    /* Full height */
-    height: 100%; 
-    
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    }
-      div.centered {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        /* bring your own prefixes */
-        transform: translate(-50%, -50%);
-        
-      }
-  </style>
-  
+  <link rel="stylesheet" type="text/css" href ="{{url_for('static',filename='CSS/style1.css')}}">
   
 </head>
 <body>
@@ -58,12 +19,11 @@
         <button class="btn btn-success" type="submit" formaction="/register">Register/Login</button>
         
         
-        
   
   
       </form>
     </nav>
-    
+    <image src="{{url_for('static',filename='image/image7.jpg')}}" style='position:fixed;top:0px;left:0px;width:100%;height:100%;z-index:-1;'>
     <div class ="centered">
       <h1>GoodRead Books</h1>
     </div>
