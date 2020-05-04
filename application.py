@@ -3,11 +3,13 @@ import datetime
 
 from flask import *
 from flask_session import Session
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,func
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models import *
 from imports import *
 from find import *
+from check_isbn import *
+
 
 
 app = Flask(__name__)
@@ -34,7 +36,8 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    return "Project 1: TODO"
+   
+    return render_template('intropage.html')
 
 
 @app.route("/register", methods= ['POST','GET'])
@@ -81,8 +84,8 @@ def admin():
     data=db.query(User).order_by(User.Timestamp)
     return render_template('admin.html',list=data)
 
-@app.route("/auth", methods=['POST','GET'])
-def auth(): 
+@app.route("/login", methods=['POST','GET'])
+def login(): 
     if request.method=='POST':
         Username=request.form.get("Username")
         Password=request.form.get("Password")
@@ -90,7 +93,7 @@ def auth():
         try:
             if (Username==user.Username) and (Password==user.Password):
                 session['Username']=Username
-                return redirect(url_for('account'))
+                return redirect(url_for('search'))
             else:
                 return redirect(url_for('register',args=1))
         except:
@@ -101,6 +104,7 @@ def auth():
 @app.route("/search", methods=['POST','GET'])
 def search():
     if request.method=='POST':
+
         field=((request.form['Choose']))
         key=request.form.get('Search') 
         search="%{}%".format(key)
@@ -123,13 +127,6 @@ def account():
     except:
         return redirect(url_for('register'))
 
-@app.route("/book",methods=['POST','GET'])
-@app.route("/book/<string:args>", methods= ['POST','GET'])
-def book(args=None):
-    message="This is isbn of the book: "+args
-    if request.method=='POST':
-        return render_template('book.html',message=message)
-    return render_template('book.html',message=message)
 
 @app.route("/review/<isbn>", methods =['GET', 'POST'])
 def review(isbn):
@@ -159,3 +156,26 @@ def review(isbn):
             return render_template("review.html", data = book, name = "User already given review", rating = rating)
     else:
         return render_template("review.html",data = book, name = Uname ,rating = rating)
+
+
+
+
+
+@app.route("/book",methods=['POST','GET'])
+@app.route("/book/<string:args>", methods= ['POST','GET'])
+def book(args=None):
+    session['isbn'] = args
+    data = check_isbn(args)
+    if request.method=='POST':
+        return render_template("book.html",list=data)
+    return render_template("book.html",list=data)
+      
+@app.route('/home',methods=['GET','POST'])
+def home():
+	return render_template("intropage.html")
+
+
+
+
+
+
