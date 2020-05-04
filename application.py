@@ -129,7 +129,7 @@ def account():
 
 
 @app.route("/review/<isbn>", methods =['GET', 'POST'])
-def review(isbn):
+def review(isbn=None):
     if session.get("Username") is None:
         return redirect("/register")
 
@@ -150,7 +150,7 @@ def review(isbn):
             db.add(temp)
             db.commit() 
             ratin = db.query(Review).filter_by(title=book.title).all()
-            return render_template("review.html",data = book, name = Uname, rating = ratin)
+            return render_template("review.html",data = book, name = Uname, rating = rating)
         except:
             db.rollback()
             return render_template("review.html", data = book, name = "User already given review", rating = rating)

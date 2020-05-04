@@ -96,7 +96,7 @@
         
         <h2>Rating:</h2>
 
-        <form class="in" action="{{url_for('review, isbn=data.isbn')}}" method="post" id="usrform">
+        <form class="in" action="{{'/review/%s'%data.isbn}}" method="post" id="usrform">
             <h3>Hello {{name}}</h3><br><br>
 
             <div class="rate" >

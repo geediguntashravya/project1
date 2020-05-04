@@ -54,17 +54,20 @@
                         <td>Publishing Year</td>
                         <td>{{data.year}}</td>
                     </tr>
-                    <tr>
-                        <td>Review</td>
-                        <td>{{data.review}}</td>
-                    </tr>
+                    
     
                 </tr>
             </tbody>
           </table> 
+          
           <br/>
+          <h4>click here to review the book!</h4>
+          <a style="text-decoration: none;" href="{{'/review/%s'%data.isbn}}"><h1>Review</h1></a>
     {% endfor %}
+
           </div>
+          
+          
           
     </body>
 </html>
