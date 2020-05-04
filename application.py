@@ -115,7 +115,7 @@ def account():
         return redirect(url_for('register'))
 
 @app.route("/review/<isbn>", methods =['GET', 'POST'])
-def review(isbn):
+def review(isbn=None):
     if session.get("Username") is None:
         return redirect("/register")
 
