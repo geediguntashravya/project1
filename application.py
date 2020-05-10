@@ -81,10 +81,10 @@ def register(args=None):
         return render_template("register.html",message=message)
 
 
-@app.route("/admin")
-def admin():
-    data=db.query(User).order_by(User.Timestamp)
-    return render_template('admin.html',list=data)
+# @app.route("/admin")
+# def admin():
+#     data=db.query(User).order_by(User.Timestamp)
+#     return render_template('admin.html',list=data)
 
 @app.route("/auth", methods=['POST','GET'])
 def auth(): 
@@ -103,17 +103,17 @@ def auth():
     else:
         return redirect(url_for('register',args=4))
 
-@app.route("/search", methods=['POST','GET'])
-def search():
-    if request.method=='POST':
-        field=((request.form['Choose']))
-        key=request.form.get('Search') 
-        search="%{}%".format(key)
-        list=find(field,search)
-        return render_template('search.html',list=list)
-    else: 
-        return render_template('search.html')
-    return render_template('search.html')
+# @app.route("/search", methods=['POST','GET'])
+# def search():
+#     if request.method=='POST':
+#         field=((request.form['Choose']))
+#         key=request.form.get('Search') 
+#         search="%{}%".format(key)
+#         list=find(field,search)
+#         return render_template('search.html',list=list)
+#     else: 
+#         return render_template('search.html')
+#     return render_template('search.html')
 
 @app.route('/api/search',methods=['POST','GET'])
 def search_api():
@@ -142,21 +142,21 @@ def logout():
     session.clear()
     return redirect(url_for('register',args=5))
 
-@app.route("/account",methods=['GET','POST'])
-def account():
-    try:
-        Username=session["Username"]
-        return render_template('userHome.html')
-    except:
-        return redirect(url_for('register'))
+# @app.route("/account",methods=['GET','POST'])
+# def account():
+#     try:
+#         Username=session["Username"]
+#         return render_template('userHome.html')
+#     except:
+#         return redirect(url_for('register'))
 
-@app.route("/book",methods=['POST','GET'])
-@app.route("/book/<string:args>", methods= ['POST','GET'])
-def book(args=None):
-    message="This is isbn of the book: "+args
-    if request.method=='POST':
-        return render_template('book.html',message=message)
-    return render_template('book.html',message=message)
+# @app.route("/book",methods=['POST','GET'])
+# @app.route("/book/<string:args>", methods= ['POST','GET'])
+# def book(args=None):
+#     message="This is isbn of the book: "+args
+#     if request.method=='POST':
+#         return render_template('book.html',message=message)
+#     return render_template('book.html',message=message)
 
 @app.route('/api/book',methods=['GET','POST'])
 def book_api():
@@ -177,8 +177,6 @@ def review_api():
         db.add(reviewobj)
         db.commit()
         print("inserted into db")
-        # existing_reviews = Review.query.filter_by(title=title).order_by(Review.timestamp.desc()).all()
-        # book_details = Book.query.get(title)
         return jsonify({"review":review,"rating":rating})
     else:
         return jsonify({"error":"You have already reviewed this book"})
