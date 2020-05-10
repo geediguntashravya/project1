@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+	<style>
+		.td_class{
+			background-color:yellow;
+		}
+		.td_class_mark{
+			background-color:red;
+		}
+	</style>
+
+<body>
+​
+<div class="container-fluid">
+  <div class="row" style="text-align:center;">
+	<h1>TODO TASKS</h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-5">
+		<div class="row">
+			<div class="col-sm-10">
+				<div class="form-group">
+					<label for="title">Task Title :</label>
+					<input type="text" class="form-control" id="title" name="title">
+				</div>
+				<div class="form-group">
+					<label for="pwd">Task Description :</label>
+					<textarea class="form-control"  name="description" id="description"></textarea>
+				</div>				
+				<button  class="btn btn-default" onclick="addTask()">Add Task</button>
+			</div>	
+		</div>
+	</div>
+    <div class="col-sm-7" style="background-color:lavenderblush;">
+		 <div class="row">
+		 <div class="col-sm-10">
+			<h3>TODO TASKS LIST</h3>
+			<table class="table table-hover">
+				<thead>
+				  <tr>
+					<th>Title</th>
+					<th>Description</th>
+					<th>Action</th>
+				  </tr>
+				</thead>
+				<tbody id="tbody">		
+					
+				</tbody>
+			  </table>
+		</div>
+		</div>
+	
+	</div>
+  </div>
+</div>
+​
+<script>
+	var tasks = [];
+	function addTask() {
+		title = document.getElementById("title").value;
+		desc = document.getElementById("description").value;
+		if(title=="" || desc==""){
+			alert("Please enter Title/Description");
+			return;
+		}
+		task = {title:title,desciption:desc};
+		tasks.push(task);
+		//console.log(tasks);
+		drawTable();
+	}
+	
+	function drawTable(){
+		tbody_data = "";
+		for(i=0;i<tasks.length;i++){
+			/*
+			if(){
+				tbody_data = tbody_data+"<tr class='td_class'>";
+			}
+			else{
+				tbody_data = tbody_data+"<tr class='td_class_mark'>";
+			}
+			*/
+			tbody_data = tbody_data+"<tr class='td_class'>";
+			tbody_data = tbody_data+"<td>"+tasks[i].title+"</td>";
+			tbody_data = tbody_data+"<td>"+tasks[i].desciption+"</td>";
+			tbody_data = tbody_data+'<td><button onclick="deleteTask('+i+')">Delete</button>&nbsp;&nbsp;&nbsp;&nbsp; <button onclick="markTask('+i+')">Mark Done</button></td>';
+			tbody_data = tbody_data+"</tr>";
+		}
+		document.getElementById("tbody").innerHTML = tbody_data;
+	}
+	
+	function deleteTask(index){
+		tasks.splice(index, 1);
+		drawTable();
+	}
+	
+	function markTask(index){
+		tds = document.getElementsByClassName("td_class");
+		tds[index].style.backgroundColor = "red";
+	}
+</script>
+
+</body>
+</html>>

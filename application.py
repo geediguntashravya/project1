@@ -4,10 +4,11 @@ import datetime
 from flask import *
 from flask_session import Session
 from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import *
 from models import *
 from imports import *
 from find import *
+from sqlalchemy import or_, and_
 
 
 app = Flask(__name__)
@@ -34,7 +35,11 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    return "Project 1: TODO"
+    try:
+        Username=session["Username"]
+        return render_template('userHome.html')
+    except:
+        return redirect(url_for('register'))
 
 
 @app.route("/register", methods= ['POST','GET'])
@@ -90,7 +95,7 @@ def auth():
         try:
             if (Username==user.Username) and (Password==user.Password):
                 session['Username']=Username
-                return redirect(url_for('account'))
+                return redirect(url_for('index'))
             else:
                 return redirect(url_for('register',args=1))
         except:
@@ -110,18 +115,43 @@ def search():
         return render_template('search.html')
     return render_template('search.html')
 
+@app.route('/api/search',methods=['POST','GET'])
+def search_api():
+    #info=request.get_json()
+    key=request.form.get('key')
+ 
+    #key=info["Search"]
+    key="%"+key+"%"
+    key=key.title()
+   
+    data=db.query(Book).filter(or_(Book.isbn.like(key),Book.title.like(key),Book.author.like(key),Book.year.like(key))).all()
+    books={"books":[]}
+    if data==None:
+        return jsonify({"success":False})
+    else:
+        for i in data:
+            dictionary=dict()
+            dictionary["isbn"]=i.isbn
+            dictionary["title"]=i.title
+            dictionary["author"]=i.author
+            dictionary["year"]=i.year
+            books["books"].append(dictionary)
+        books["success"]=True
+       
+        return jsonify(books)
+
 @app.route("/logout",methods=['GET','POST'])
 def logout():
     session.clear()
     return redirect(url_for('register',args=5))
 
-@app.route("/account",methods=['GET','POST'])
-def account():
-    try:
-        Username=session["Username"]
-        return render_template('account.html')
-    except:
-        return redirect(url_for('register'))
+# @app.route("/account",methods=['GET','POST'])
+# def account():
+#     try:
+#         Username=session["Username"]
+#         return render_template('userHome.html')
+#     except:
+#         return redirect(url_for('register'))
 
 @app.route("/book",methods=['POST','GET'])
 @app.route("/book/<string:args>", methods= ['POST','GET'])
@@ -130,4 +160,28 @@ def book(args=None):
     if request.method=='POST':
         return render_template('book.html',message=message)
     return render_template('book.html',message=message)
+
+@app.route('/api/book',methods=['GET','POST'])
+def book_api():
+    key=request.form.get("isbn")
+    print(key)
+    isbn=Book.query.get(key)
+    print(isbn)
+    return jsonify({"title":isbn.title,"author":isbn.author,"year":isbn.year,"isbn":isbn.isbn})
+
+@app.route('/api/review',methods=['GET','POST'])
+def review_api():
+    key=request.form.get("title")
+    title=Review.query.get(key)
+    data=Review.query.filter(and_(Review.title == title ,Review.username == session.get("Username"))).first()
+    if data is None:
+        reviewobj = Review(title=title,rating=Review.rating,review=Review.review,Username=Review.username)
+        db.add(reviewobj)
+        db.commit()
+        print("inserted into db")
+        existing_reviews = Review.query.filter_by(title=title).order_by(Review.timestamp.desc()).all()
+        book_details = Book.query.get(title)
+        return jsonify({"review":title.review,"rating":title.rating})
+    else:
+        return jsonify({"error":"You have already reviewed this book"})
 
