@@ -53,7 +53,7 @@
             //request.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
 
             document.querySelector('#books').innerHTML = ""
-            document.querySelector('#load').innerHTML = "<br><b>Loading Results<b>"
+            document.querySelector('#load').innerHTML = "<br><b>Loading...<b>"
             request.onload = () => {
 
                 const response = JSON.parse(request.responseText);
@@ -81,7 +81,7 @@
 
                 } else {
                     document.querySelector('#load').style.color = "red";
-                    document.querySelector('#load').innerHTML = "<br><b>" + response.error + "</b>";
+                    document.querySelector('#load').innerHTML = "<br><b>No such book</b>";
                 }
             }
 
@@ -103,7 +103,6 @@
             request.onload = () =>{
                 const response = JSON.parse(request.responseText);
                 var displaydata = `
-                <h2><u>Book Review Page</u></h2>
                 <table class="table">
                     <thead class="thead-light">
                         <tr>
@@ -130,24 +129,28 @@
                         </tr>
                     </tbody>
                 </table>
-                <h3><pre class="tab1">Please rate your book here:   </pre></h3>
+                <h4><pre class="tab1">Rate here</pre></h4>
                 <div class="stars" class="form-check form-check-inline" class="sr-only">
 
-                    <div>
+                    <div class="rate">
                         <input class="star star-5 rating" id="star-5" type="radio" name="star" value=5 required>
                         <label class="star star-5" for="star-5">5</label>
+
                         <input class="star star-4 rating" id="star-4" type="radio" name="star" value=4 required>
                         <label class="star star-4" for="star-4">4</label>
+
                         <input class="star star-3 rating" id="star-3" type="radio" name="star" value=3 required>
                         <label class="star star-3" for="star-3">3</label>
+
                         <input class="star star-2 rating" id="star-2" type="radio" name="star" value=2 required>
                         <label class="star star-2" for="star-2">2</label>
+                        
                         <input class="star star-1 rating" id="star-1" type="radio" name="star" value=1 required>
                         <label class="star star-1" for="star-1">1</label>
                     </div>
                     <br><br>
                     <div class="mb-3">
-                    <label for="validationTextarea" style="color: black;font-size:larger;">review</label>
+                    <label for="validationTextarea" style="color: black;font-size:larger;">Review here</label>
                     <textarea class="form-control is-invalid" name= "textarea" id="review" placeholder="Write review" required></textarea>
                         <br>`+
 
@@ -205,9 +208,23 @@
                     document.querySelector('#load').innerHTML += content
                 }
                 else{
-                    var content = `<p>Rating : ${response.rating} </p>
-                    <p>Review : ${response.review} </p><br><br>`;
-                    document.querySelector('#load').innerHTML += content
+                    var disp=`<table class = "table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Rating</th>
+                            <th scope="col" class="bg-warning">Review</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${response.rating}</td>
+                            <td>${response.review} </td>
+                        </tr>   
+                    </tbody>
+                </table>`
+                    // var content = `<p>Rating : ${response.rating} </p>
+                    // <p>Review : ${response.review} </p><br><br>`;
+                    document.querySelector('#load').innerHTML += disp
                 }
             }
             var value = document.querySelector('#review').value;
@@ -230,6 +247,46 @@
         }
 
     </script>
+    <style>
+        .rate {
+                    float: left;
+                    height: 40px;
+                    padding: 0 10px;
+                    align-content: center;
+                    margin : auto auto auto 40%;
+                }
+                .rate:not(:checked) > input {
+                    position:absolute;
+                    top:-9999px;
+                }
+                .rate:not(:checked) > label {
+                    float:right;
+                    width:1em;
+                    overflow:hidden;
+                    white-space:nowrap;
+                    cursor:pointer;
+                    font-size:30px;
+                    color:#ccc;
+                }
+                .rate:not(:checked) > label:before {
+                    content: '★ ';
+                }
+                .rate > input:checked ~ label {
+                    color: #ffc700;    
+                }
+                .rate:not(:checked) > label:hover,
+                .rate:not(:checked) > label:hover ~ label {
+                    color: #deb217;  
+                }
+                .rate > input:checked + label:hover,
+                .rate > input:checked + label:hover ~ label,
+                .rate > input:checked ~ label:hover,
+                .rate > input:checked ~ label:hover ~ label,
+                .rate > label:hover ~ input:checked ~ label {
+                    color: #c59b08;
+                }
+    </style>
+    
 </head>
 <header>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
@@ -289,12 +346,9 @@
                         <div class="input-group-prepend">
                             <input type="search" placeholder="" name="Search" class="form-control" id="Search"
                                 aria-label="Search" aria-describedby="basic-addon1" required>
-                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-search" aria-hidden="true"></i></span>
+                                
+                                <button type="submit" class="btn btn-primary" style="width: 150px;" onclick="search()">Search</button>
                         </div>
-                    </div>
-
-                    <div>
-                        <button type="submit" class="btn btn-primary" style="width: 150px;" onclick="search()">Search</button>
                     </div>
                     <p id="load" style="text-align: center;"></p>
                 </div>

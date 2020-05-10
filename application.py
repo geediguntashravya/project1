@@ -119,11 +119,9 @@ def search():
 def search_api():
     #info=request.get_json()
     key=request.form.get('key')
- 
     #key=info["Search"]
     key="%"+key+"%"
     key=key.title()
-   
     data=db.query(Book).filter(or_(Book.isbn.like(key),Book.title.like(key),Book.author.like(key),Book.year.like(key))).all()
     books={"books":[]}
     if data==None:
@@ -137,7 +135,6 @@ def search_api():
             dictionary["year"]=i.year
             books["books"].append(dictionary)
         books["success"]=True
-       
         return jsonify(books)
 
 @app.route("/logout",methods=['GET','POST'])
