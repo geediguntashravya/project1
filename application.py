@@ -3,13 +3,12 @@ import datetime
 
 from flask import *
 from flask_session import Session
-from sqlalchemy import create_engine,func
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import *
 from models import *
 from imports import *
 from find import *
-from check_isbn import *
-
+from sqlalchemy import or_, and_
 
 
 app = Flask(__name__)
@@ -36,8 +35,11 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-   
-    return render_template('intropage.html')
+    try:
+        Username=session["Username"]
+        return render_template('userHome.html')
+    except:
+        return redirect(url_for('register'))
 
 
 @app.route("/register", methods= ['POST','GET'])
@@ -84,8 +86,8 @@ def admin():
     data=db.query(User).order_by(User.Timestamp)
     return render_template('admin.html',list=data)
 
-@app.route("/login", methods=['POST','GET'])
-def login(): 
+@app.route("/auth", methods=['POST','GET'])
+def auth(): 
     if request.method=='POST':
         Username=request.form.get("Username")
         Password=request.form.get("Password")
@@ -93,7 +95,7 @@ def login():
         try:
             if (Username==user.Username) and (Password==user.Password):
                 session['Username']=Username
-                return redirect(url_for('search'))
+                return redirect(url_for('index'))
             else:
                 return redirect(url_for('register',args=1))
         except:
@@ -104,7 +106,6 @@ def login():
 @app.route("/search", methods=['POST','GET'])
 def search():
     if request.method=='POST':
-
         field=((request.form['Choose']))
         key=request.form.get('Search') 
         search="%{}%".format(key)
@@ -113,6 +114,31 @@ def search():
     else: 
         return render_template('search.html')
     return render_template('search.html')
+
+@app.route('/api/search',methods=['POST','GET'])
+def search_api():
+    #info=request.get_json()
+    key=request.form.get('key')
+ 
+    #key=info["Search"]
+    key="%"+key+"%"
+    key=key.title()
+   
+    data=db.query(Book).filter(or_(Book.isbn.like(key),Book.title.like(key),Book.author.like(key),Book.year.like(key))).all()
+    books={"books":[]}
+    if data==None:
+        return jsonify({"success":False})
+    else:
+        for i in data:
+            dictionary=dict()
+            dictionary["isbn"]=i.isbn
+            dictionary["title"]=i.title
+            dictionary["author"]=i.author
+            dictionary["year"]=i.year
+            books["books"].append(dictionary)
+        books["success"]=True
+       
+        return jsonify(books)
 
 @app.route("/logout",methods=['GET','POST'])
 def logout():
@@ -123,59 +149,40 @@ def logout():
 def account():
     try:
         Username=session["Username"]
-        return render_template('account.html')
+        return render_template('userHome.html')
     except:
         return redirect(url_for('register'))
-
-
-@app.route("/review/<isbn>", methods =['GET', 'POST'])
-def review(isbn=None):
-    if session.get("Username") is None:
-        return redirect("/register")
-
-    # isbn = "0380795272"
-    book  = db.query(Book).filter_by(isbn = isbn).first()
-    rating = db.query(Review).filter_by(title=book.title).all()
-    # print("hello book name",book.isbn)
-    
-    # obj = db.query(User).get("Username")
-    Uname = session.get("Username")
-    print(Uname) 
-    if request.method == "POST":
-        title = book.title
-        rating1 = request.form.get("rate")
-        review = request.form.get("comment")
-        temp = Review(Uname,title,rating1,review)
-        try:
-            db.add(temp)
-            db.commit() 
-            ratin = db.query(Review).filter_by(title=book.title).all()
-            return render_template("review.html",data = book, name = Uname, rating = rating)
-        except:
-            db.rollback()
-            return render_template("review.html", data = book, name = "User already given review", rating = rating)
-    else:
-        return render_template("review.html",data = book, name = Uname ,rating = rating)
-
-
-
-
 
 @app.route("/book",methods=['POST','GET'])
 @app.route("/book/<string:args>", methods= ['POST','GET'])
 def book(args=None):
-    session['isbn'] = args
-    data = check_isbn(args)
+    message="This is isbn of the book: "+args
     if request.method=='POST':
-        return render_template("book.html",list=data)
-    return render_template("book.html",list=data)
-      
-@app.route('/home',methods=['GET','POST'])
-def home():
-	return render_template("intropage.html")
+        return render_template('book.html',message=message)
+    return render_template('book.html',message=message)
 
+@app.route('/api/book',methods=['GET','POST'])
+def book_api():
+    key=request.form.get("isbn")
+    print(key)
+    isbn=Book.query.get(key)
+    print(isbn)
+    return jsonify({"title":isbn.title,"author":isbn.author,"year":isbn.year,"isbn":isbn.isbn})
 
-
-
-
+@app.route('/api/review',methods=['GET','POST'])
+def review_api():
+    title=request.form.get("title")
+    rating=request.form.get("rating")
+    review=request.form.get("review")
+    data=Review.query.filter(and_(Review.title == title ,Review.username == session.get("Username"))).first()
+    if data is None:
+        reviewobj = Review(title=title,rating=rating,review=review,Username=session.get("Username"))
+        db.add(reviewobj)
+        db.commit()
+        print("inserted into db")
+        # existing_reviews = Review.query.filter_by(title=title).order_by(Review.timestamp.desc()).all()
+        # book_details = Book.query.get(title)
+        return jsonify({"review":review,"rating":rating})
+    else:
+        return jsonify({"error":"You have already reviewed this book"})
 
